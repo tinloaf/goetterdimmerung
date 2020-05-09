@@ -49,7 +49,7 @@ steps
 increment
   The number of :ref:`steps <config_steps>` to increase / decrease the internal step counter at every :ref:`interval <config_interval>`.
 	**Type**: int
-	/ **Default**: 20
+	/ **Default**: 50
 
 .. _config_interval:
 

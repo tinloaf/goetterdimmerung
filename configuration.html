@@ -1,0 +1,308 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Goetterdimmerung Configuration &#8212; Goetterdimmerung 0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Example Configurations" href="examples.html" />
+    <link rel="prev" title="Welcome to Goetterdimmerung’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="goetterdimmerung-configuration">
+<h1>Goetterdimmerung Configuration<a class="headerlink" href="#goetterdimmerung-configuration" title="Permalink to this headline">¶</a></h1>
+<p id="file-config">This file specifies the possible configuration options for Goetterdimmerung. There also is a collection of <a class="reference internal" href="examples.html#file-examples"><span class="std std-ref">config examples</span></a>.</p>
+<div class="section" id="global-options">
+<h2>Global Options<a class="headerlink" href="#global-options" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>entities</dt><dd><dl class="simple">
+<dt>List of entities to be controlled. See <a class="reference internal" href="#conf-entity"><span class="std std-ref">Entity Configuration</span></a>.</dt><dd><p><strong>Type</strong>: list of <a class="reference internal" href="#conf-entity"><span class="std std-ref">entities</span></a>.</p>
+</dd>
+</dl>
+</dd>
+<dt>attribute</dt><dd><dl class="simple">
+<dt>The name of the attribute to be controlled. This attribute is sent as service data in calls to services, e.g. <code class="docutils literal notranslate"><span class="pre">light.turn_on</span></code>.</dt><dd><p><strong>Type</strong>: str
+/ <strong>Default</strong>: “brightness”</p>
+</dd>
+</dl>
+</dd>
+<dt>on_service</dt><dd><dl class="simple">
+<dt>The name of the service to be called for turning an entity on. Note that the dot separating component and service must be replaced by a forward slash (<code class="docutils literal notranslate"><span class="pre">/</span></code>)</dt><dd><p><strong>Type</strong>: str
+/ <strong>Default</strong>: “light/turn_on”</p>
+</dd>
+</dl>
+</dd>
+<dt>off_service</dt><dd><dl class="simple">
+<dt>The name of the service to be called for turning an entity off. Note that the dot separating component and service must be replaced by a forward slash (<code class="docutils literal notranslate"><span class="pre">/</span></code>)</dt><dd><p><strong>Type</strong>: str
+/ <strong>Default</strong>: “light/turn_off”</p>
+</dd>
+</dl>
+</dd>
+<dt>toggle_service</dt><dd><dl class="simple">
+<dt>The name of the service to be called for toggling an entity. Note that the dot separating component and service must be replaced by a forward slash (<code class="docutils literal notranslate"><span class="pre">/</span></code>)</dt><dd><p><strong>Type</strong>: str
+/ <strong>Default</strong>: “light/toggle”</p>
+</dd>
+</dl>
+</dd>
+<dt>ignore_off</dt><dd><dl class="simple">
+<dt>Setting this to <code class="docutils literal notranslate"><span class="pre">true</span></code> causes switched-off entities to be ignored during dimming (instead of turning them on). This allows to control multiple different lighting scenes with a single Goetterdimmerung instance. See the <a class="reference internal" href="examples.html#example-multiple-scenes"><span class="std std-ref">M̀ultiple Scenes Example</span></a>.</dt><dd><p><strong>Type</strong>: bool
+/ <strong>Default</strong>: false</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="simple" id="config-steps">
+<dt>steps</dt><dd><dl class="simple">
+<dt>The number of dimming steps. Note that this can be different from the number of values that are possible for the controlled value (“brightness”) of the entities.</dt><dd><p><strong>Type</strong>: int
+/ <strong>Default</strong>: 255</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="simple" id="config-increment">
+<dt>increment</dt><dd><dl class="simple">
+<dt>The number of <a class="reference internal" href="#config-steps"><span class="std std-ref">steps</span></a> to increase / decrease the internal step counter at every <a class="reference internal" href="#config-interval"><span class="std std-ref">interval</span></a>.</dt><dd><p><strong>Type</strong>: int
+/ <strong>Default</strong>: 20</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="simple" id="config-interval">
+<dt>interval_ms</dt><dd><dl class="simple">
+<dt>The interval in miliseconds between two dimming <a class="reference internal" href="#config-steps"><span class="std std-ref">steps</span></a></dt><dd><p><strong>Type</strong>: int
+/ <strong>Default</strong>: 200</p>
+</dd>
+</dl>
+</dd>
+<dt>start_up</dt><dd><dl class="simple">
+<dt>The event at which to start dimming up. See the <a class="reference internal" href="#conf-event"><span class="std std-ref">event specification documentation</span></a> for details.</dt><dd><p><strong>Type</strong>: <a class="reference internal" href="#conf-event"><span class="std std-ref">event specification</span></a></p>
+</dd>
+</dl>
+</dd>
+<dt>stop_up</dt><dd><dl class="simple">
+<dt>The event at which to stop dimming up. See the <a class="reference internal" href="#conf-event"><span class="std std-ref">event specification documentation</span></a> for details.</dt><dd><p><strong>Type</strong>: <a class="reference internal" href="#conf-event"><span class="std std-ref">event specification</span></a></p>
+</dd>
+</dl>
+</dd>
+<dt>start_down</dt><dd><dl class="simple">
+<dt>The event at which to start dimming down. See the <a class="reference internal" href="#conf-event"><span class="std std-ref">event specification documentation</span></a> for details.</dt><dd><p><strong>Type</strong>: <a class="reference internal" href="#conf-event"><span class="std std-ref">event specification</span></a></p>
+</dd>
+</dl>
+</dd>
+<dt>stop_down</dt><dd><dl class="simple">
+<dt>The event at which to stop dimming down. See the <a class="reference internal" href="#conf-event"><span class="std std-ref">event specification documentation</span></a> for details.</dt><dd><p><strong>Type</strong>: <a class="reference internal" href="#conf-event"><span class="std std-ref">event specification</span></a></p>
+</dd>
+</dl>
+</dd>
+<dt>on_event</dt><dd><dl class="simple">
+<dt>The event at which to turn all entities on. See the <a class="reference internal" href="#conf-event"><span class="std std-ref">event specification documentation</span></a> for details.</dt><dd><p><strong>Type</strong>: <a class="reference internal" href="#conf-event"><span class="std std-ref">event specification</span></a></p>
+</dd>
+</dl>
+</dd>
+<dt>off_event</dt><dd><dl class="simple">
+<dt>The event at which to turn all entities off. See the <a class="reference internal" href="#conf-event"><span class="std std-ref">event specification documentation</span></a> for details.</dt><dd><p><strong>Type</strong>: <a class="reference internal" href="#conf-event"><span class="std std-ref">event specification</span></a></p>
+</dd>
+</dl>
+</dd>
+<dt>toggle_event</dt><dd><dl class="simple">
+<dt>The event at which to toggle all entities. See the <a class="reference internal" href="#conf-event"><span class="std std-ref">event specification documentation</span></a> for details.</dt><dd><p><strong>Type</strong>: <a class="reference internal" href="#conf-event"><span class="std std-ref">event specification</span></a></p>
+</dd>
+</dl>
+</dd>
+</dl>
+</div>
+<div class="section" id="entity-configuration">
+<span id="conf-entity"></span><h2>Entity Configuration<a class="headerlink" href="#entity-configuration" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">entities</span></code> key of the global configuration expects a list of entities. An example of such a list could be:</p>
+<p>Each element of the list denotes one controlled entity. Each entity has the following configuration options:</p>
+<dl class="simple">
+<dt>entity_id</dt><dd><dl class="simple">
+<dt>The entity ID of the controlled entity.</dt><dd><p><strong>Type</strong>: Entity ID (str)</p>
+</dd>
+</dl>
+</dd>
+<dt>min</dt><dd><dl class="simple">
+<dt>Minimum value (“brightness”) to ever send to the entity. The light will never be dimmed below this value (unless turned off).</dt><dd><p><strong>Type</strong>: int
+/ <strong>Default</strong>: 0</p>
+</dd>
+</dl>
+</dd>
+<dt>max</dt><dd><dl class="simple">
+<dt>Maximum value (“brightness”) to ever send to this entity. The light will never be dimmed above this value.</dt><dd><p><strong>Type</strong>: int
+/ <strong>Default</strong>: 255</p>
+</dd>
+</dl>
+</dd>
+<dt>start</dt><dd><dl class="simple">
+<dt>The minimum <a class="reference internal" href="#config-steps"><span class="std std-ref">step</span></a> at which this light should be turned on. At steps below this step, the light will be turned off.</dt><dd><p><strong>Type</strong>: int
+/ <strong>Default</strong>: 0</p>
+</dd>
+</dl>
+</dd>
+<dt>end</dt><dd><dl class="simple">
+<dt>The <a class="reference internal" href="#config-steps"><span class="std std-ref">step</span></a> at which this light should reach its maximum brightness. All steps above this step will still only set the light to its maximum brightness.</dt><dd><p><strong>Type</strong>: int
+/ <strong>Default</strong>: The maximum number of <a class="reference internal" href="#config-steps"><span class="std std-ref">steps</span></a></p>
+</dd>
+</dl>
+</dd>
+<dt>weight</dt><dd><dl class="simple">
+<dt>The weight of this light. When two lights are dimmed up simultaneously, their brightness should increase proportionally to their weight.</dt><dd><p><strong>Type</strong>: float
+/ <strong>Default</strong>: 1.0</p>
+</dd>
+</dl>
+</dd>
+<dt>initial</dt><dd><dl class="simple">
+<dt>Specification of how to get attributes for this entity when turning it on. See the <a class="reference internal" href="#conf-initial"><span class="std std-ref">initial values config</span></a> for details. This allows to always turn lights on with a specified brightness, or color, or white temperature.</dt><dd><p><strong>Type</strong>: <a class="reference internal" href="#conf-initial"><span class="std std-ref">initial value config</span></a></p>
+</dd>
+</dl>
+</dd>
+<dt>off_state</dt><dd><dl class="simple">
+<dt>The state that should be considered <code class="docutils literal notranslate"><span class="pre">off</span></code> for this device.</dt><dd><p><strong>Type</strong>: str
+/ <strong>Default</strong>: “off”</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="section" id="initial-value-configuration">
+<span id="conf-initial"></span><h3>Initial Value Configuration<a class="headerlink" href="#initial-value-configuration" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">initial</span></code> option in the entity configuration allows to retrieve arbitrary attributes to be sent with the <code class="docutils literal notranslate"><span class="pre">turn_on</span></code> service calls. The configuration is a dictionary, where every key corresponds to an attribute to be sent. For each of these attributes, there are three ways of configuring a value:</p>
+<ul class="simple">
+<li><p>A string that does not contain a dot is treated as a fixed value</p></li>
+<li><p>A string that contains a dot is treated as an entity ID. The respective entity’s state is used as value.</p></li>
+<li><p>A dictionary must contain an <code class="docutils literal notranslate"><span class="pre">entity_id</span></code> or a <code class="docutils literal notranslate"><span class="pre">value</span></code> and a <code class="docutils literal notranslate"><span class="pre">type</span></code>. The entity’s state (resp. the fixed value) is cast into the requested type.</p></li>
+</ul>
+<p>These are examples of setting the <code class="docutils literal notranslate"><span class="pre">color_temperature</span></code> attribute for a light:</p>
+<p>Setting a fixed value of 100:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">initial</span><span class="p">:</span>
+        <span class="n">color_temperature</span><span class="p">:</span> <span class="mi">100</span>
+</pre></div>
+</div>
+<p>Setting a fixed value of 100, casting to int:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">initial</span><span class="p">:</span>
+        <span class="n">color_temperature</span><span class="p">:</span>
+          <span class="n">value</span><span class="p">:</span> <span class="mi">100</span>
+                <span class="nb">type</span><span class="p">:</span> <span class="s2">&quot;int&quot;</span>
+</pre></div>
+</div>
+<p>Getting the state of an <code class="docutils literal notranslate"><span class="pre">input_number</span></code>, casting to int:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">initial</span><span class="p">:</span>
+  <span class="n">color_temperature</span><span class="p">:</span>
+          <span class="n">entity_id</span><span class="p">:</span> <span class="n">input_number</span><span class="o">.</span><span class="n">some_entity</span>
+                <span class="nb">type</span><span class="p">:</span> <span class="s2">&quot;int</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="event-specification">
+<span id="conf-event"></span><h1>Event Specification<a class="headerlink" href="#event-specification" title="Permalink to this headline">¶</a></h1>
+<p>Several configuration options allow for the specification of an event. Every event specification is a dictionary. It must have a key <code class="docutils literal notranslate"><span class="pre">event</span></code> specifying the type of event to listen for. Additionally, it may have a key <code class="docutils literal notranslate"><span class="pre">event_data</span></code>, which can in turn contain a dictionary of arbitrary key-value mappings. The respective function will only be triggered if every key-value mapping in the <code class="docutils literal notranslate"><span class="pre">event_data</span></code> dictionary is also present in the event data of the fired event.</p>
+<p>This configuration starts the “dim up” function only if a <code class="docutils literal notranslate"><span class="pre">deconz_event</span></code> of type <code class="docutils literal notranslate"><span class="pre">1002</span></code> was fired from a button with the id <code class="docutils literal notranslate"><span class="pre">my_button</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dim_up_start</span><span class="p">:</span>
+  <span class="n">event</span><span class="p">:</span> <span class="s2">&quot;deconz_event&quot;</span>
+        <span class="n">event_data</span><span class="p">:</span>
+          <span class="nb">id</span><span class="p">:</span> <span class="s2">&quot;my_button&quot;</span>
+                <span class="n">event</span><span class="p">:</span> <span class="mi">1002</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Goetterdimmerung</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Goetterdimmerung Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#global-options">Global Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#entity-configuration">Entity Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#event-specification">Event Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Example Configurations</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to Goetterdimmerung’s documentation!</a></li>
+      <li>Next: <a href="examples.html" title="next chapter">Example Configurations</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Lukas Barth.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/configuration.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

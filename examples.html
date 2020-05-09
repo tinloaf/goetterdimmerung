@@ -1,0 +1,230 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Example Configurations &#8212; Goetterdimmerung 0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Goetterdimmerung Configuration" href="configuration.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="example-configurations">
+<h1>Example Configurations<a class="headerlink" href="#example-configurations" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="simple-example">
+<span id="file-examples"></span><h2>Simple Example<a class="headerlink" href="#simple-example" title="Permalink to this headline">¶</a></h2>
+<p>In this example, there is just one entity (<code class="docutils literal notranslate"><span class="pre">light.some_light</span></code>) that should be dimmed up/down by an Ikea Trådfri dimmer connected via the Deconz integration. These dimmers send events of type <code class="docutils literal notranslate"><span class="pre">1001</span></code> if the ‘up’ button was pressed and held, and of type <code class="docutils literal notranslate"><span class="pre">1003</span></code> if the ‘up’ button was released. If the ‘up’ button was only pressed shortly (which we will use to turn the light on), <code class="docutils literal notranslate"><span class="pre">1002</span></code> is sent. For the ‘down’ button, the respective events are <code class="docutils literal notranslate"><span class="pre">2001</span></code>, <code class="docutils literal notranslate"><span class="pre">2003</span></code> and <code class="docutils literal notranslate"><span class="pre">2002</span></code>. The name of the button is <code class="docutils literal notranslate"><span class="pre">my_button</span></code>.</p>
+<p>We never want the light to be turned off by just dimming down, so we set a minimum value of <code class="docutils literal notranslate"><span class="pre">10</span></code>.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">my_app</span><span class="p">:</span>
+  <span class="nt">module</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">goetterdimmerung</span>
+  <span class="nt">class</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">goetterdimmerung</span>
+
+  <span class="nt">entities</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="nt">entity_id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">light.some_light</span>
+      <span class="nt">min</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
+
+  <span class="nt">off_event</span><span class="p">:</span>
+    <span class="nt">event</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">deconz_event</span>
+    <span class="nt">event_data</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;my_button&quot;</span>
+      <span class="nt">event</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2002</span>
+  <span class="nt">on_event</span><span class="p">:</span>
+    <span class="nt">event</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">deconz_event</span>
+    <span class="nt">event_data</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;my_button&quot;</span>
+      <span class="nt">event</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1002</span>
+  <span class="nt">start_up</span><span class="p">:</span>
+    <span class="nt">event</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">deconz_event</span>
+    <span class="nt">event_data</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;my_button&quot;</span>
+      <span class="nt">event</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1001</span>
+  <span class="nt">stop_up</span><span class="p">:</span>
+    <span class="nt">event</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">deconz_event</span>
+    <span class="nt">event_data</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;my_button&quot;</span>
+      <span class="nt">event</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1003</span>
+  <span class="nt">start_down</span><span class="p">:</span>
+    <span class="nt">event</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">deconz_event</span>
+    <span class="nt">event_data</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;my_button&quot;</span>
+      <span class="nt">event</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2001</span>
+  <span class="nt">stop_down</span><span class="p">:</span>
+    <span class="nt">event</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">deconz_event</span>
+    <span class="nt">event_data</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;my_button&quot;</span>
+      <span class="nt">event</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2003</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="multiple-scenes-with-one-dimmer">
+<span id="example-multiple-scenes"></span><h2>Multiple Scenes With One Dimmer<a class="headerlink" href="#multiple-scenes-with-one-dimmer" title="Permalink to this headline">¶</a></h2>
+<p>In this example, we still only have the one dimmer from above, but we now have three lights: <code class="docutils literal notranslate"><span class="pre">light.light_a</span></code>, <code class="docutils literal notranslate"><span class="pre">light.light_b</span></code> and <code class="docutils literal notranslate"><span class="pre">light.light_c</span></code>. We want to have two scenes, one where lights <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">b</span></code> are on, and one where <code class="docutils literal notranslate"><span class="pre">b</span></code> and <code class="docutils literal notranslate"><span class="pre">c</span></code> are on. Both these scenes should be toggled by short-pressing the upper/lower button on the dimmer. Holding the dimmer buttons should dim up/down whatever is currently active.</p>
+<p>We achieve this by having three instances of <code class="docutils literal notranslate"><span class="pre">Goetterdimmerung</span></code>: Two to toggle the respective scenes (we could of course also do that directly in Home Assistant, without <code class="docutils literal notranslate"><span class="pre">Goetterdimmerung</span></code>), one that dims whatever is currently active. The key here is to use the <code class="docutils literal notranslate"><span class="pre">ignore_off</span></code> option.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">toggle_a</span><span class="p">:</span>
+  <span class="nt">module</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">goetterdimmerung</span>
+  <span class="nt">class</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">goetterdimmerung</span>
+
+  <span class="nt">entities</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="nt">entity_id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">light.light_a</span>
+      <span class="nt">min</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
+    <span class="p p-Indicator">-</span> <span class="nt">entity_id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">light.light_b</span>
+      <span class="nt">min</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
+
+  <span class="nt">toggle_event</span><span class="p">:</span>
+    <span class="nt">event</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">deconz_event</span>
+    <span class="nt">event_data</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;my_button&quot;</span>
+      <span class="nt">event</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1002</span>
+
+<span class="nt">toggle_b</span><span class="p">:</span>
+  <span class="nt">module</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">goetterdimmerung</span>
+  <span class="nt">class</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">goetterdimmerung</span>
+
+  <span class="nt">entities</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="nt">entity_id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">light.light_b</span>
+      <span class="nt">min</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
+    <span class="p p-Indicator">-</span> <span class="nt">entity_id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">light.light_c</span>
+      <span class="nt">min</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
+
+  <span class="nt">toggle_event</span><span class="p">:</span>
+    <span class="nt">event</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">deconz_event</span>
+    <span class="nt">event_data</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;my_button&quot;</span>
+      <span class="nt">event</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2002</span>
+
+<span class=" -Error"> </span><span class="nt">dimmer</span><span class="p">:</span>
+   <span class="nt">module</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">goetterdimmerung</span>
+   <span class="nt">class</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Goetterdimmerung</span>
+
+   <span class="nt">entities</span><span class="p">:</span>
+     <span class="p p-Indicator">-</span> <span class="nt">entity_id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">light.light_a</span>
+       <span class="nt">min</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
+     <span class="p p-Indicator">-</span> <span class="nt">entity_id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">light.light_b</span>
+       <span class="nt">min</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
+     <span class="p p-Indicator">-</span> <span class="nt">entity_id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">light.light_c</span>
+       <span class="nt">min</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
+
+   <span class="nt">ignore_off</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+
+   <span class="nt">start_up</span><span class="p">:</span>
+     <span class="nt">event</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">deconz_event</span>
+     <span class="nt">event_data</span><span class="p">:</span>
+       <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;my_button&quot;</span>
+       <span class="nt">event</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1001</span>
+   <span class="nt">stop_up</span><span class="p">:</span>
+     <span class="nt">event</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">deconz_event</span>
+     <span class="nt">event_data</span><span class="p">:</span>
+       <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;my_button&quot;</span>
+       <span class="nt">event</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1003</span>
+   <span class="nt">start_down</span><span class="p">:</span>
+     <span class="nt">event</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">deconz_event</span>
+     <span class="nt">event_data</span><span class="p">:</span>
+       <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;my_button&quot;</span>
+       <span class="nt">event</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2001</span>
+   <span class="nt">stop_down</span><span class="p">:</span>
+     <span class="nt">event</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">deconz_event</span>
+     <span class="nt">event_data</span><span class="p">:</span>
+       <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;my_button&quot;</span>
+       <span class="nt">event</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2003</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Goetterdimmerung</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Goetterdimmerung Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html#event-specification">Event Specification</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Example Configurations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#simple-example">Simple Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#multiple-scenes-with-one-dimmer">Multiple Scenes With One Dimmer</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="configuration.html" title="previous chapter">Goetterdimmerung Configuration</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Lukas Barth.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/examples.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
