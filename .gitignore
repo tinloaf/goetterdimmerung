@@ -1,2 +1,4 @@
 *~
 doc/_*
+
+.dir-locals.el

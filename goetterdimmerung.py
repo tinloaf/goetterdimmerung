@@ -5,14 +5,15 @@ from bisect import bisect_left
 
 
 class Entities(object):
-    """Class that holds the list of entities managed by an instance of Goetterdimmerung.  Also
-    responsible for computing the mapping of steps to actual values sent to the respective
-    entities.
+    """Class that holds the list of entities managed by an instance of
+    Goetterdimmerung.  Also responsible for computing the mapping of
+    steps to actual values sent to the respective entities.
     """
     class Entity(object):
         """ A single managed entity"""
 
-        def __init__(self, eid, emin, emax, start, end, weight, initial_vals, off_state):
+        def __init__(self, eid, emin, emax, start, end, weight, initial_vals,
+                     off_state):
             """Create an entity.
 
             Parameters
@@ -28,9 +29,11 @@ class Entities(object):
             end : int
                   Step at which this entity should have maximum brightness
             weight : float
-                     Weight of the entity. Entities' dimming speed will be proportional to their weight.
+                     Weight of the entity. Entities' dimming speed will be
+                     proportional to their weight.
             initial_vals : dict
-                           Specification of how to get initial values when turning on the entity.
+                           Specification of how to get initial values when
+                           turning on the entity.
             off_state : str
                         Specification of which state should be considered "off"
             """
@@ -78,7 +81,8 @@ class Entities(object):
         step : int
                The step which to report the values for
         eids : list of str
-               List of entity IDs corresponding to the list of entities for which to get the values
+               List of entity IDs corresponding to the list of entities for
+               which to get the values
 
         Returns
         -------
@@ -91,7 +95,8 @@ class Entities(object):
         while self._break_points[self._last_index + 1] < step:
             self._last_index += 1
 
-        return ((self._entities[eid], self._get_at_current_step(eid, step)) for eid in eids)
+        return ((self._entities[eid],
+                 self._get_at_current_step(eid, step)) for eid in eids)
 
     def _get_at_current_step(self, eid, step):
         return self._entities[eid].emin \
@@ -188,7 +193,8 @@ class Goetterdimmerung(hass.Hass):
 
     def _get_filtered_eids(self):
         return [eid for eid in self._entities.get_eids()
-                if self._states[eid] != self._entities.get_entity(eid).off_state]
+                if self._states[eid] != (self._entities
+                                         .get_entity(eid).off_state)]
 
     async def _state_cb(self, eid, attr, old, new, kwargs):
         if attr != self._attribute:
@@ -203,7 +209,8 @@ class Goetterdimmerung(hass.Hass):
 
     async def _refresh_state_cache(self):
         for eid in self._entities.get_eids():
-            self._states[eid] = await self.get_state(entity_id=eid, attribute=self._attribute)
+            self._states[eid] = await self.get_state(entity_id=eid,
+                                                     attribute=self._attribute)
 
     async def _initialize_tracking(self):
         # First, register tracking callbacks for all managed entities
@@ -233,9 +240,10 @@ class Goetterdimmerung(hass.Hass):
                 val = float(self._states[eid])
                 values[eid] = val
             except TypeError:
-                # off or other error. If we have turn-on default values for this entity, use that.
-                # Else, ignore this entity
-                initial_vals = await self._get_initial_vals(self._entities.get_entity(eid))
+                # off or other error. If we have turn-on default values for
+                # this entity, use that. Else, ignore this entity
+                initial_vals = await self._get_initial_vals(
+                    self._entities.get_entity(eid))
                 if self._attribute in initial_vals:
                     values[eid] = float(initial_vals)
 
@@ -289,36 +297,40 @@ class Goetterdimmerung(hass.Hass):
         else:
             step = self._step
 
-        # Ignore incoming state changes. They are caused by ourselves and would mess up step
-        # caching
+        # Ignore incoming state changes. They are caused by ourselves and
+        # would mess up step caching
         self._ignore_states = True
-        while self._current_increment is not None and self._current_interval is not None:
+        while (self._current_increment is not None and
+               self._current_interval is not None):
             step += self._current_increment
             step = max(0, min(self._steps, step))
             self._step = step
 
             futures = []
-            for (entity, val) in self._entities.get_all_at(step, self._get_filtered_eids()):
+            for (entity, val) in self._entities.get_all_at(
+                    step, self._get_filtered_eids()):
                 service_args = {'entity_id': entity.eid,
                                 self._attribute: int(val)}
                 futures.append(self.call_service(
                     service=self._on_service, **service_args))
 
             await asyncio.gather(*futures)
-            if self._current_interval:  # If dimming has been stopped, _current_interval is None
+            if self._current_interval:  # Dimming has stopped
                 await self.sleep(self._current_interval / 1000)
 
-            if step == self._steps and self._current_increment and self._current_increment > 0:
+            if step == self._steps and \
+               self._current_increment and self._current_increment > 0:
                 # stop the dim-up
                 self._current_increment = None
                 self._current_interval = None
-            if step == 0 and self._current_increment and self._current_increment < 0:
+            if step == 0 and \
+               self._current_increment and self._current_increment < 0:
                 # stop the dim-down
                 self._current_increment = None
                 self._current_interval = None
 
-        # Update state cache and re-enable state tracking - after a brief pause to allow for
-        # in-flight changes to settle
+        # Update state cache and re-enable state tracking - after a
+        # brief pause to allow for in-flight changes to settle
         await self.sleep(200)
         self._ignore_states = False
         await self._refresh_state_cache()
@@ -351,7 +363,8 @@ class Goetterdimmerung(hass.Hass):
         data = {}
         for (k, v) in entity.initial_vals.items():
             if isinstance(v, str) and v.find('.') != -1:
-                # This is treated as an entity id. Get its state as initial value
+                # This is treated as an entity id. Get its state as
+                # initial value
                 data[k] = str(await self.get_state(v))
             elif isinstance(v, dict):
                 if 'entity_id' in v:
@@ -359,8 +372,9 @@ class Goetterdimmerung(hass.Hass):
                 elif 'value' in v:
                     raw = v['value']
                 else:
-                    self.log('ERROR: No way to retrieve an initial value for attr {} of entity {}'.format(
-                        k, entity.eid))
+                    self.log(('ERROR: No way to retrieve an initial value'
+                              ' for attr {} of entity {}').format(
+                                  k, entity.eid))
 
                 # TODO have a hardcoded list of defaults
                 t = v.get('type', 'str')
@@ -378,7 +392,8 @@ class Goetterdimmerung(hass.Hass):
     async def _turn_on(self, event_name, data, kwargs):
         tasks = []
         for eid in self._entities.get_eids():
-            service_args = await self._get_initial_vals(self._entities.get_entity(eid))
+            service_args = await self._get_initial_vals(
+                self._entities.get_entity(eid))
             service_args['entity_id'] = eid
 
             tasks.append(self.call_service(
@@ -396,7 +411,8 @@ class Goetterdimmerung(hass.Hass):
     async def _toggle(self, event_name, data, kwargs):
         tasks = []
         for eid in self._entities.get_eids():
-            service_args = await self._get_initial_vals(self._entities.get_entity(eid))
+            service_args = await self._get_initial_vals(
+                self._entities.get_entity(eid))
             service_args['entity_id'] = eid
 
             tasks.append(self.call_service(
